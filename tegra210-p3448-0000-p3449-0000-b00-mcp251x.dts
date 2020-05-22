@@ -1,0 +1,201 @@
+/dts-v1/;
+
+/ {
+	overlay-name = "MCP251x CAN Controller";
+	compatible = "nvidia,p3449-0000-b00+p3448-0000-b00", "nvidia,p3449-0000-a02+p3448-0000-a02";
+
+	fragment@0 {
+		target-path = [2f 00];
+
+		__overlay__ {
+
+			clocks {
+
+				can_clock {
+					compatible = "fixed-clock";
+					#clock-cells = <0x0>;
+					clock-frequency = <0xf42400>;
+					clock-accuracy = <0x64>;
+					linux,phandle = <0x1>;
+					phandle = <0x1>;
+				};
+			};
+		};
+	};
+
+	fragment@1 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+
+			spi@0 {
+				compatible = "microchip,mcp2515";
+				reg = <0x0>;
+				spi-max-frequency = <0x989680>;
+				nvidia,enable-hw-based-cs;
+				nvidia,rx-clk-tap-delay = <0x6>;
+				clocks = <0x1>;
+				interrupts = <0xffffffff 0xc8 0x1>;
+
+				controller-data {
+					nvidia,cs-setup-clk-count = <0x1e>;
+					nvidia,cs-hold-clk-count = <0x1e>;
+					nvidia,rx-clk-tap-delay = <0x1f>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+
+			spi@0 {
+				compatible = "microchip,mcp2515";
+				reg = <0x1>;
+				spi-max-frequency = <0x989680>;
+				nvidia,enable-hw-based-cs;
+				nvidia,rx-clk-tap-delay = <0x7>;
+				clocks = <0x1>;
+				interrupts = <0xffffffff 0xa8 0x1>;
+
+				controller-data {
+					nvidia,cs-setup-clk-count = <0x1e>;
+					nvidia,cs-hold-clk-count = <0x1e>;
+					nvidia,rx-clk-tap-delay = <0x1f>;
+					nvidia,tx-clk-tap-delay = <0x0>;
+				};
+			};
+		};
+	};
+
+	fragment@3 {
+		target = <0xffffffff>;
+
+		__overlay__ {
+			pinctrl-names = "default";
+			pinctrl-0 = <0x2>;
+
+			header-40pin-pinmux {
+				linux,phandle = <0x2>;
+				phandle = <0x2>;
+
+				pin16 {
+					nvidia,function = "spi2";
+					nvidia,pins = "spi2_cs1_pdd0";
+					nvidia,pull = <0x2>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x0>;
+				};
+
+				pin19 {
+					nvidia,function = "spi1";
+					nvidia,pins = "spi1_mosi_pc0";
+					nvidia,pull = <0x0>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x0>;
+				};
+
+				pin21 {
+					nvidia,function = "spi1";
+					nvidia,pins = "spi1_miso_pc1";
+					nvidia,pull = <0x0>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x1>;
+				};
+
+				pin22 {
+					nvidia,function = "spi2";
+					nvidia,pins = "spi2_miso_pb5";
+					nvidia,pull = <0x0>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x1>;
+				};
+
+				pin23 {
+					nvidia,function = "spi1";
+					nvidia,pins = "spi1_sck_pc2";
+					nvidia,pull = <0x0>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x1>;
+				};
+
+				pin24 {
+					nvidia,function = "spi1";
+					nvidia,pins = "spi1_cs0_pc3";
+					nvidia,pull = <0x2>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x0>;
+				};
+
+				pin26 {
+					nvidia,function = "spi1";
+					nvidia,pins = "spi1_cs1_pc4";
+					nvidia,pull = <0x2>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x0>;
+				};
+
+				pin37 {
+					nvidia,function = "spi2";
+					nvidia,pins = "spi2_mosi_pb4";
+					nvidia,pull = <0x0>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x0>;
+				};
+
+				pin13 {
+					nvidia,function = "spi2";
+					nvidia,pins = "spi2_sck_pb6";
+					nvidia,pull = <0x0>;
+					nvidia,tristate = <0x0>;
+					nvidia,enable-input = <0x1>;
+				};
+			};
+		};
+	};
+
+	__symbols__ {
+		can_clock = "/fragment@0/__overlay__/clocks/can_clock";
+		hdr40_pinmux = "/fragment@3/__overlay__/header-40pin-pinmux";
+	};
+
+	__fixups__ {
+		hdr40_spi1 = "/fragment@1:target:0";
+		gpio = "/fragment@1/__overlay__/spi@0:interrupts:0", "/fragment@2/__overlay__/spi@0:interrupts:0";
+		hdr40_spi2 = "/fragment@2:target:0";
+		pinmux = "/fragment@3:target:0";
+	};
+
+	__local_fixups__ {
+
+		fragment@1 {
+
+			__overlay__ {
+
+				spi@0 {
+					clocks = <0x0>;
+				};
+			};
+		};
+
+		fragment@2 {
+
+			__overlay__ {
+
+				spi@0 {
+					clocks = <0x0>;
+				};
+			};
+		};
+
+		fragment@3 {
+
+			__overlay__ {
+				pinctrl-0 = <0x0>;
+			};
+		};
+	};
+};
